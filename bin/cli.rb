@@ -47,6 +47,7 @@ attr_reader :contents #:answer, :printer, :instream, :outstream
     # contents.each do |row|
     # name = row[2]
     # puts name
+    puts "hi"
     puts @messages['file_load']
   end
 
