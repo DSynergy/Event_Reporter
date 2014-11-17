@@ -1,41 +1,57 @@
 # require 'printer'
 # require 'game'
-require 'csv'
+require 'CSV'
+require 'yaml'
+
+
 
 class CLI
-#  attr_reader :answer, :printer, :instream, :outstream
+attr_reader :contents #:answer, :printer, :instream, :outstream
 
    def initialize(instream, outstream)
      @command_entered = ""
 #     @printer  = Printer.new
      @instream  = instream
      @outstream = outstream
+     @contents = ''
+     @filename = "/event_attendees.csv"
+     @messages = YAML.load_file(File.expand_path(File.join(File.dirname(__FILE__), "messages.yaml")))
+     @path = File.join(__dir__, @filename)
+
    end
 
   def call
     until quit?
-    print messages["command_prompt"]
-    command_entered = gets.strip.downcase
-    process_command(command_entered)
+    print @messages["command_prompt"]
+    @command = gets.strip.downcase
+    process_command(@command)
   end
   end
 
   def process_command(command)
+    @command = command
 
+    #take in command entered
+    #turn into an array
+    #evaluate the first member and send to submethods
 
   end
 
+  def quit?
+    @command == 'quit' || @command == 'q'
+  end
+
+
   def load
-    filename = "../lib/event_attendees.csv"
-    contents = CSV.open filename, headers: true, header_converters: :symbol
+    @contents = CSV.open(@path, headers: true, header_converters: :symbol)
     # contents.each do |row|
     # name = row[2]
     # puts name
-    puts "file has been loaded"
+    puts @messages['file_load']
   end
 
   def help
-    puts messages["help"]
+    puts @messages["help"]
   end
 
   def queue

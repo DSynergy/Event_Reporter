@@ -1,0 +1,8 @@
+help: >
+  The available commands are load, queque, queque count, queque clear, queue print, queue print by <attribute>, queue save to <filename.csv>, find <attribute> <criteria>.
+
+command_prompt: >
+  Please enter your command (enter 'help' for info).
+
+file_load: >
+  file has been loaded
