@@ -21,7 +21,7 @@ attr_reader :contents #:answer, :printer, :instream, :outstream
    end
 
   def call
-    until quit?
+    until quit
     print @messages["command_prompt"]
     @command = gets.strip.downcase
     process_command(@command)
@@ -29,40 +29,56 @@ attr_reader :contents #:answer, :printer, :instream, :outstream
   end
 
   def process_command(command)
-    @command = command
+    case
+    when quit
+      puts 'quit!'
+      exit
+    when help
+      puts 'help!'
+    when find
+      puts 'find!'
+    when queue
+      puts 'queue!'
+
+    else
+      puts 'invalid command'
+    end
+  end
+
 
     #take in command entered
     #turn into an array
     #evaluate the first member and send to submethods
 
-  end
 
-  def quit?
+  def quit
     @command == 'quit' || @command == 'q'
   end
 
+  def help
+    @command == 'help' || @command == 'h'
+  end
 
   def load
+    @command == 'load' || @command == 'l'
+  end
+
+
+  def find
+    @command == 'find' || @command == 'f'
+  end
+
+  def queue
+    @command == 'queue'
+  end
+
+
+  def load_file
     @contents = CSV.open(@path, headers: true, header_converters: :symbol)
     # contents.each do |row|
     # name = row[2]
     # puts name
-    puts "hi333"
     puts @messages['file_load']
   end
 
-  def help
-    puts @messages["help"]
-  end
-
-  def queue
-    []
-  end
-
-  def find
-  end
-
-  def quit?
-    false
-  end
 end
