@@ -63,6 +63,7 @@ attr_reader :contents #:answer, :printer, :instream, :outstream
     @command == 'load' || @command == 'l'
   end
 
+
   def find
     @command == 'find' || @command == 'f'
   end
@@ -72,7 +73,7 @@ attr_reader :contents #:answer, :printer, :instream, :outstream
   end
 
 
-  def load
+  def load_file
     @contents = CSV.open(@path, headers: true, header_converters: :symbol)
     # contents.each do |row|
     # name = row[2]
