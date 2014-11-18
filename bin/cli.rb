@@ -1,45 +1,51 @@
 # require 'printer'
 # require 'game'
 require 'CSV'
-require 'yaml'
+require_relative '../lib/messages'
 
 
 
 class CLI
-attr_reader :contents #:answer, :printer, :instream, :outstream
+attr_reader :contents, :command #:answer, :printer, :instream, :outstream
 
    def initialize(instream, outstream)
      @command_entered = ""
-#     @printer  = Printer.new
      @instream  = instream
      @outstream = outstream
      @contents = ''
      @filename = "/event_attendees.csv"
-     @messages = YAML.load_file(File.expand_path(File.join(File.dirname(__FILE__), "messages.yaml")))
+     @messages = Messages.new
      @path = File.join(__dir__, @filename)
 
    end
 
   def call
     until quit
-    print @messages["command_prompt"]
+    print @messages.command_prompt
     @command = gets.strip.downcase
     process_command(@command)
   end
   end
 
   def process_command(command)
+    # @first_command = command.split[0]
+    # puts @first_command
     case
     when quit
       puts 'quit!'
       exit
     when help
-      puts 'help!'
+      puts @messages.help
+    when help_load
+      puts @messages.help_load
+    when help_queue
+      puts @messages.help_queue
+    when help_find
+      puts @messages.help_find
     when find
       puts 'find!'
     when queue
       puts 'queue!'
-
     else
       puts 'invalid command'
     end
@@ -59,17 +65,23 @@ attr_reader :contents #:answer, :printer, :instream, :outstream
     @command == 'help' || @command == 'h'
   end
 
+  def help_load
+    @command == 'help load'
+  end
+
+
+
   def load
     @command == 'load' || @command == 'l'
   end
 
 
   def find
-    @command == 'find' || @command == 'f'
+    @first_command == 'find' || @first_command == 'f'
   end
 
   def queue
-    @command == 'queue'
+    @first_command== 'queue'
   end
 
 

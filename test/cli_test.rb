@@ -34,7 +34,7 @@ class CLI_Test < Minitest::Test
     @cli.call
     assert @cli.command != nil
 
-
   end
+
 
 end
