@@ -1,31 +1,22 @@
-# require 'printer'
-# require 'game'
 require 'CSV'
 require_relative '../lib/messages'
 require_relative '../lib/finder.rb'
-# require_relative '../lib/entry'
-
 
 
 class CLI
-attr_reader :contents, :command #:answer, :printer, :instream, :outstream
+attr_reader :contents, :command
 
   def initialize(instream, outstream)
-   @command_entered = ""
-   @instream  = instream
-   @outstream = outstream
-   @filename = "/event_attendees.csv"
-   path = File.join(__dir__, @filename)
-   @contents =  CSV.read(path, headers: true, header_converters: :symbol)
-    #  @contents.each do |data|
-
-      #  puts name
-      #
-    #  end
+    @command_entered = ""
+    @instream  = instream
+    @outstream = outstream
+    @filename = "/event_attendees.csv"
+    path = File.join(__dir__, @filename)
+    @contents =  CSV.read(path, headers: true, header_converters: :symbol)
     puts contents.headers
-     puts "this is entry1 #{contents[:state][0]}"
-     @messages = Messages.new
-   end
+    puts "this is entry1 #{contents[:state][0]}"
+    @messages = Messages.new
+  end
 
   def call
     until quit
@@ -33,17 +24,13 @@ attr_reader :contents, :command #:answer, :printer, :instream, :outstream
     @command = gets.strip.downcase
     process_command(@command)
     puts " this is command #{@command}"
+    end
   end
 
-  def load_file(filename)
+  def load_file(filename="/event_attendees.csv")
     path = File.join(__dir__, filename)
     @contents = CSV.read(path, headers: true, header_converters: :symbol)
-    # contents.each do |row|
-    # name = row[2]
-    # puts name
     puts @messages.file_load
-  end
-
   end
 
   def process_command(command)
@@ -77,23 +64,19 @@ attr_reader :contents, :command #:answer, :printer, :instream, :outstream
       self.clean_data
       finder = Finder.new(contents)
       finder.lookup(attribute, criteria)
+      finder.queue_count
     when queue
       puts 'queue!'
-    when load
+    when load?
       if command.split.length == 2
-        @filename = attribute
+        filename = attribute
+        self.load_file(filename)
       end
-      self.load_file(@filename)
+      self.load_file
     else
       puts 'invalid command'
     end
   end
-
-
-    #take in command entered
-    #turn into an array
-    #evaluate the first member and send to submethods
-
 
   def quit
     @command == 'quit' || @command == 'q'
@@ -139,7 +122,7 @@ attr_reader :contents, :command #:answer, :printer, :instream, :outstream
     @command == 'help find'
   end
 
-  def load
+  def load?
     @command.split[0] == 'load'
   end
 
@@ -152,12 +135,17 @@ attr_reader :contents, :command #:answer, :printer, :instream, :outstream
   end
 
   def clean_data
-    #take each column and process it
     @contents[:zipcode] = @contents[:zipcode].map{|zipcode| zipcode.to_s.rjust(5,'0')}
     @contents[:first_name] = @contents[:first_name].map(&:downcase)
     @contents[:last_name] = @contents[:last_name].map(&:downcase)
     @contents[:email_address] = @contents[:email_address].map(&:downcase)
-    @contents[:homephone] = @contents[:homephone].map{|phone| phone.gsub!(/\D/,'')}
+    @contents[:homephone] = @contents[:homephone].map do |phone|
+      if phone.nil?
+        phone = "0000000000"
+      else
+      phone.gsub!(/\D/,'')
+      end
+    end
     @contents[:city] = @contents[:city].map do|city|
        unless city.nil?
        city.downcase
@@ -168,20 +156,9 @@ attr_reader :contents, :command #:answer, :printer, :instream, :outstream
         state.downcase
       end
     end
-
-    #first_name = data[:first_Name]
-    # last_name = data[:last_Name]
-    # email = data[:Email_Address]
-    # phone = data[:HomePhone]
-    # street = data[:Street]
-    # city = data[:City]
-    # state = data[:State]
-    # zipcode = data[:Zipcode]
   end
 
   def finder(attribute,criteria)
     puts "the attribute is #{attribute}, criteria is #{criteria}"
   end
-
-
 end
