@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 
-bin_dir = File.expand_path('', __dir__)
-lib_dir = File.expand_path('../lib', __dir__)
+bin_dir = File.expand_path('./bin', __dir__)
+lib_dir = File.expand_path('./lib', __dir__)
 $LOAD_PATH.unshift(lib_dir, bin_dir)
 
 
-require 'cli'
+require_relative './bin/cli'
 
 CLI.new($stdin, $stdout).call

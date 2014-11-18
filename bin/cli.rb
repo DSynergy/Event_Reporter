@@ -15,7 +15,7 @@ attr_reader :contents, :command #:answer, :printer, :instream, :outstream
      @contents = ''
      @filename = "/event_attendees.csv"
      @messages = Messages.new
-     @path = File.join(__dir__, @filename)
+
 
    end
 
@@ -28,8 +28,9 @@ attr_reader :contents, :command #:answer, :printer, :instream, :outstream
   end
 
   def process_command(command)
-    # @first_command = command.split[0]
-    # puts @first_command
+    attribute = command.split[1]
+    puts "this is attribute #{attribute}"
+    criteria = command.split[2]
     case
     when quit
       puts 'quit!'
@@ -40,12 +41,30 @@ attr_reader :contents, :command #:answer, :printer, :instream, :outstream
       puts @messages.help_load
     when help_queue
       puts @messages.help_queue
+    when help_queue_print
+      puts @messages.help_queue_print
+    when help_queue_clear
+      puts @messages.help_queue_clear
+    when help_queue_print
+      puts @messages.help_queue_print
+    when help_queue_print_by
+      puts @messages.help_queue_print_by
+    when help_queue_count
+      puts @messages.help_queue_count
+    when help_queue_save_to
+      puts @messages.help_queue_save_to
     when help_find
       puts @messages.help_find
     when find
       puts 'find!'
+      self.finder(attribute, criteria)
     when queue
       puts 'queue!'
+    when load
+      if command.split.length == 2
+        @filename = attribute
+      end
+      self.load_file(@filename)
     else
       puts 'invalid command'
     end
@@ -69,28 +88,62 @@ attr_reader :contents, :command #:answer, :printer, :instream, :outstream
     @command == 'help load'
   end
 
-
-
-  def load
-    @command == 'load' || @command == 'l'
+  def help_queue
+    @command == 'help queue'
   end
 
+  def help_queue_print
+    @command == 'help queue print'
+  end
+
+  def help_queue_clear
+    @command = 'help queue clear'
+  end
+
+  def help_queue_print
+    @command = 'help queue print'
+  end
+
+  def help_queue_print_by
+    @command = 'help queue print by'
+  end
+
+  def help_queue_count
+    @command = 'help queue count'
+  end
+
+  def help_queue_save_to
+    @command = 'help queue save to'
+  end
+
+  def help_find
+    @command == 'help find'
+  end
+
+  def load
+    @command.split[0] == 'load'
+  end
 
   def find
-    @first_command == 'find' || @first_command == 'f'
+    @command.split[0] == 'find' || @command.split[0] == 'f'
   end
 
   def queue
     @first_command== 'queue'
   end
 
-
-  def load_file
-    @contents = CSV.open(@path, headers: true, header_converters: :symbol)
+  def load_file(filename)
+    path = File.join(__dir__, filename)
+    @contents = CSV.open(path, headers: true, header_converters: :symbol)
     # contents.each do |row|
     # name = row[2]
     # puts name
-    puts @messages['file_load']
+    puts @messages.file_load
   end
+
+  def finder(attribute,criteria)
+    puts "the attribute is #{attribute}, criteria is #{criteria}"
+  end
+
 
 end
