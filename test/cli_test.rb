@@ -1,7 +1,7 @@
+require 'simplecov'
+SimpleCov.start
 require_relative 'test_helper'
 require_relative '../bin/cli'
-require 'yaml'
-
 
 class CLI_Test < Minitest::Test
 
@@ -33,7 +33,6 @@ class CLI_Test < Minitest::Test
   def test_process_commands
     @cli.call
     assert @cli.command != nil
-
   end
 
 
