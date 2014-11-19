@@ -47,4 +47,9 @@ class Messages
   def help_queue_save_to
     "Queue save to <filename> will save the current queue to a new CSV file with the given <filename>."
   end
+
+  #empty_queue_error_message
+
+
+
 end

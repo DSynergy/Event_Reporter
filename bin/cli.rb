@@ -1,10 +1,11 @@
 require 'CSV'
 require_relative '../lib/messages'
-require_relative '../lib/finder.rb'
+require_relative '../lib/finder'
 
 
 class CLI
 attr_reader :contents, :command
+attr_accessor :finder
 
   def initialize(instream, outstream)
     @command_entered = ""
@@ -13,9 +14,10 @@ attr_reader :contents, :command
     @filename = "/event_attendees.csv"
     path = File.join(__dir__, @filename)
     @contents =  CSV.read(path, headers: true, header_converters: :symbol)
-    puts contents.headers
-    puts "this is entry1 #{contents[:state][0]}"
+    # puts contents.headers
+    # puts "this is entry1 #{contents[:state][0]}"
     @messages = Messages.new
+    @finder = Finder.new(@contents)
   end
 
   def call
@@ -34,9 +36,11 @@ attr_reader :contents, :command
   end
 
   def process_command(command)
+    @command = command
     attribute = command.split[1]
     puts "this is attribute #{attribute}"
-    criteria = command.split[2]
+    commandlength = -1 + command.length
+    criteria = command.split[2..commandlength].join(' ')
     case
     when quit
       puts 'quit!'
@@ -59,14 +63,31 @@ attr_reader :contents, :command
       puts @messages.help_queue_save_to
     when help_find
       puts @messages.help_find
+    when queue_print
+      puts @finder.queue2
+    when queue_print_by
+      # puts "entered print by"
+      attribute = @command.split[3]
+      @finder.sorter(attribute)
+      puts @finder.queue2
+      # puts @command.split[3]
+
     when find
       puts 'find!'
       self.clean_data
-      finder = Finder.new(contents)
-      finder.lookup(attribute, criteria)
-      finder.queue_count
-    when queue
-      puts 'queue!'
+      @finder = Finder.new(contents)
+      @finder.lookup(attribute, criteria)
+      # puts @finder.queue
+    when queue_count
+      puts "in the queue counter"
+      @finder.queue_counter
+    when queue_clear
+      @finder.queue2 = []
+    when queue_save_to
+      filename = @command.split[3]
+      CSV.open(filename, 'w') do |row|
+        row << @finder.queue2
+      end
     when load?
       if command.split.length == 2
         filename = attribute
@@ -134,6 +155,28 @@ attr_reader :contents, :command
     @first_command== 'queue'
   end
 
+  def queue_count
+    @command == 'queue count'
+  end
+
+  def queue_print
+    @command == 'queue print'
+  end
+
+  def queue_print_by
+    @command.split[0..2].join(' ') == 'queue print by'
+    # puts @command.split[0..2]
+  end
+
+  def queue_save_to
+    @command.split[0..2].join(' ') == 'queue save to'
+    # puts @command.split[0..2]
+  end
+
+  def queue_clear
+    @command == 'queue clear'
+  end
+
   def clean_data
     @contents[:zipcode] = @contents[:zipcode].map{|zipcode| zipcode.to_s.rjust(5,'0')}
     @contents[:first_name] = @contents[:first_name].map(&:downcase)
@@ -158,7 +201,7 @@ attr_reader :contents, :command
     end
   end
 
-  def finder(attribute,criteria)
-    puts "the attribute is #{attribute}, criteria is #{criteria}"
-  end
+  # def finder(attribute,criteria)
+  #   puts "the attribute is #{attribute}, criteria is #{criteria}"
+  # end
 end
