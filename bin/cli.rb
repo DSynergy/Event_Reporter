@@ -1,6 +1,8 @@
 require 'CSV'
 require_relative '../lib/messages'
 require_relative '../lib/finder'
+require_relative '../lib/CSV_processor'
+require_relative '../lib/cleaner'
 
 
 class CLI
@@ -14,8 +16,6 @@ attr_accessor :finder
     @filename = "/event_attendees.csv"
     path = File.join(__dir__, @filename)
     @contents =  CSV.read(path, headers: true, header_converters: :symbol)
-    # puts contents.headers
-    # puts "this is entry1 #{contents[:state][0]}"
     @messages = Messages.new
     @finder = Finder.new(@contents)
   end
@@ -64,14 +64,17 @@ attr_accessor :finder
     when help_find
       puts @messages.help_find
     when queue_print
-      @messages.format_output(@finder.queue2)
+      @csv_processor = CSV_processor.new(@finder.queue2).format_output
+      # @csv_processor.format_output
+    # @messages.format_output(@finder.queue2)
     when queue_print_by
       attribute = @command.split[3]
       @finder.sorter(attribute)
       @messages.format_output(@finder.queue2)
     when find
       puts 'find!'
-      self.clean_data
+      cleaner = Cleaner.new(@contents)
+      cleaner.clean_all
       @finder = Finder.new(contents)
       @finder.lookup(attribute, criteria)
       # puts @finder.queue
@@ -82,10 +85,8 @@ attr_accessor :finder
       @finder.queue2 = []
     when queue_save_to
       filename = @command.split[3]
-      CSV.open(filename, 'w') do |row|
-        row << "LAST NAME  FIRST NAME  EMAIL  ZIPCODE  CITY  STATE  ADDRESS  PHONE"
-        row << @finder.queue2
-      end
+      @csv_processor = CSV_processor.new(filename, @finder.queue2)
+      @csv_processor.print_to_file
     when load?
       if command.split.length == 2
         filename = attribute
@@ -173,30 +174,6 @@ attr_accessor :finder
 
   def queue_clear
     @command == 'queue clear'
-  end
-
-  def clean_data
-    @contents[:zipcode] = @contents[:zipcode].map{|zipcode| zipcode.to_s.rjust(5,'0')}
-    @contents[:first_name] = @contents[:first_name].map(&:downcase)
-    @contents[:last_name] = @contents[:last_name].map(&:downcase)
-    @contents[:email_address] = @contents[:email_address].map(&:downcase)
-    @contents[:homephone] = @contents[:homephone].map do |phone|
-      if phone.nil?
-        phone = "0000000000"
-      else
-      phone.gsub!(/\D/,'')
-      end
-    end
-    @contents[:city] = @contents[:city].map do|city|
-       unless city.nil?
-       city.downcase
-       end
-     end
-    @contents[:state] = @contents[:state].map do|state|
-      unless state.nil?
-        state.downcase
-      end
-    end
   end
 
   # def finder(attribute,criteria)
