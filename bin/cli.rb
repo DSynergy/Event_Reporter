@@ -86,6 +86,7 @@ attr_accessor :finder
     when queue_save_to
       filename = @command.split[3]
       CSV.open(filename, 'w') do |row|
+        row << "LAST NAME  FIRST NAME  EMAIL  ZIPCODE  CITY  STATE  ADDRESS  PHONE"
         row << @finder.queue2
       end
     when load?
