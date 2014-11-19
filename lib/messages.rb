@@ -48,6 +48,15 @@ class Messages
     "Queue save to <filename> will save the current queue to a new CSV file with the given <filename>."
   end
 
+  def format_output(queue)
+   puts  "LAST NAME  FIRST NAME  EMAIL  ZIPCODE  CITY  STATE  ADDRESS  PHONE"
+    puts"puts this is queue's class #{queue.flatten.class}"
+   queue_rows = queue.map {|row| " #{row[:last_name]}\t#{row[:first_name]}\t#{row[:email_address]}\t#{row[:zipcode]}\t#{row[:city]}\t#{row[:state]}\t#{row[:address]}\t#{row[:homephone]}"}
+   puts queue_rows
+
+
+  end
+
   #empty_queue_error_message
 
 

@@ -64,14 +64,11 @@ attr_accessor :finder
     when help_find
       puts @messages.help_find
     when queue_print
-      puts @finder.queue2
+      @messages.format_output(@finder.queue2)
     when queue_print_by
-      # puts "entered print by"
       attribute = @command.split[3]
       @finder.sorter(attribute)
-      puts @finder.queue2
-      # puts @command.split[3]
-
+      @messages.format_output(@finder.queue2)
     when find
       puts 'find!'
       self.clean_data
