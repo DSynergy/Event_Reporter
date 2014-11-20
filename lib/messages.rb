@@ -71,7 +71,7 @@ class Messages
  / /_/ / /_/ / / / / /_   / /___  __/ /_/ /| |/ /  __/_/
 /_____/\____/_/ /_/\__/  /_____\___/\__,_/ |___/\___(_)
 
-  There are more events to report and more CSVs to parse!"
+  There are more events to report and more CSVs to explore!"
 
   end
 

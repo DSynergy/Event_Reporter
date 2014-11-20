@@ -6,7 +6,7 @@ class CSV_processor
   end
 
   def format_output
-     puts  "LAST NAME       FIRST NAME       EMAIL                  ZIPCODE         CITY           STATE     ADDRESS               PHONE"
+     puts  "LAST NAME       FIRST NAME      EMAIL                           ZIPCODE         CITY                    STATE           ADDRESS                         PHONE"
      queue_rows = @queue.map {|row| "#{row[:last_name].ljust(10, " ")}\t#{row[:first_name].ljust(10, " ")}\t#{row[:email_address].ljust(30, " ")}\t#{row[:zipcode].ljust(9, " ")}\t#{row[:city].ljust(20, " ")}\t#{row[:state].ljust(10, " ")}\t#{row[:street].ljust(30, " ")}\t#{row[:homephone]}\n"}
      puts queue_rows
   end
