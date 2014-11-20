@@ -6,8 +6,8 @@ require_relative '../lib/cleaner'
 
 
 class CLI
-attr_reader :contents, :command
-attr_accessor :finder
+  attr_reader :contents, :command
+  attr_accessor :finder
 
   def initialize(instream, outstream)
     @command_entered = ""
@@ -21,17 +21,20 @@ attr_accessor :finder
   end
 
   def call
+    puts @messages.intro_message
     until quit
-    print @messages.command_prompt
-    @command = gets.strip.downcase
-    process_command(@command)
+      print @messages.command_prompt
+      @command = gets.strip.downcase
+      process_command(@command)
     end
   end
 
   def load_file(filename="/event_attendees.csv")
     path = File.join(__dir__, filename)
     @contents = CSV.read(path, headers: true, header_converters: :symbol)
+    puts @messages.file_load
   end
+
 
   def process_command(command)
     @command = command
@@ -39,7 +42,7 @@ attr_accessor :finder
     commandlength = -1 + command.length
     case
     when quit
-      puts 'quit!'
+      puts @messages.quit
       exit
     when help
       puts @messages.help
@@ -66,11 +69,15 @@ attr_accessor :finder
       @finder.sorter(attribute)
       @csv_processor = CSV_processor.new(@finder.queue2).format_output
     when find
-      criteria = command.split[2..commandlength].join(' ')
-      cleaner = Cleaner.new(@contents)
-      cleaner.clean_all
-      @finder = Finder.new(@contents)
-      @finder.lookup(attribute, criteria)
+      if attribute != nil
+        criteria = command.split[2..commandlength].join(' ')
+        cleaner = Cleaner.new(@contents)
+        cleaner.clean_all
+        @finder = Finder.new(@contents)
+        @finder.lookup(attribute, criteria)
+      else
+        puts @messages.invalid_command
+      end
     when queue_count
       @finder.queue_counter
     when queue_clear
@@ -87,7 +94,7 @@ attr_accessor :finder
         self.load_file
       end
     else
-      puts 'invalid command'
+      puts @messages.invalid_command
     end
   end
 

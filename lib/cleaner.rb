@@ -5,7 +5,7 @@ class Cleaner
   end
 
   def clean_all
-    self.clean_state
+    clean_state
     clean_zipcode
     clean_first_name
     clean_last_name
@@ -83,7 +83,6 @@ class Cleaner
   end
 
   def clean_home_phone
-    puts "home phone called"
     @contents[:homephone] = @contents[:homephone].map do |homephone|
       if homephone.nil?
         homephone = "0000000000"

@@ -20,4 +20,5 @@ class Finder
   def sorter(attribute)
     @queue2 = @queue2.sort{|a,b| a[attribute.to_sym] <=> b[attribute.to_sym]}
   end
+  
 end

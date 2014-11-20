@@ -2,16 +2,12 @@ class Messages
 
   def help
     puts "The available commands are: load, queue, queue count, queue clear, queue print, queue print by <attribute>, queue save to <filename.csv>, and find <attribute> <criteria>. Type 'help <command>' for more info.
-    /n The list of attributes includes: last name, first name, email, zipcode, city, state, address and phone number.
-    /n The list of criteria includes the desired entry under the attributes. Example: all attendees with the last name <attribute> of Gault <criteria>"
+    \nThe list of attributes includes: last name, first name, email, zipcode, city, state, address and phone number.
+    \nThe list of criteria includes the desired entry under the attributes. Example: all attendees with the last name <attribute> of Gault <criteria>"
   end
 
   def command_prompt
     puts "Please enter your command (enter 'help' for info)>>>>"
-  end
-
-  def file_load
-    puts "The file has been loaded"
   end
 
   def help_load
@@ -48,10 +44,35 @@ class Messages
     "Queue save to <filename> will save the current queue to a new CSV file with the given <filename>."
   end
 
-  
+  def invalid_command
+    "I didn't quite understand that. Type 'help' for a list of commands"
+  end
 
-  #empty_queue_error_message
+  def intro_message
+  " Welcome to the one, the only,
+      ______                 __     ____                        __
+     / ____/   _____  ____  / /_   / __ \___  ____  ____  _____/ /____  _____
+    / __/ | | / / _ \/ __ \/ __/  / /_/ / _ \/ __ \/ __ \/ ___/ __/ _ \/ ___/
+   / /___ | |/ /  __/ / / / /_   / _, _/  __/ /_/ / /_/ / /  / /_/  __/ /
+  /_____/ |___/\___/_/ /_/\__/  /_/ |_|\___/ .___/\____/_/   \__/\___/_/
+                                          /_/
+  "
+  end
 
+  def quit
+  "
+    ____              __     __                         __
+   / __ \____  ____  / /_   / /  ___  ____ __   _____  / /
+  / / / / __ \/ __ \/ __/  / /  / _ \/ __ `/ | / / _ \/ /
+ / /_/ / /_/ / / / / /_   / /___  __/ /_/ /| |/ /  __/_/
+/_____/\____/_/ /_/\__/  /_____\___/\__,_/ |___/\___(_)
 
+  There are more events to report and more CSVs to parse!"
+
+  end
+
+  def file_load
+    "Your file has been loaded correctly. Huzzah"
+  end
 
 end
