@@ -25,22 +25,18 @@ attr_accessor :finder
     print @messages.command_prompt
     @command = gets.strip.downcase
     process_command(@command)
-    puts " this is command #{@command}"
     end
   end
 
   def load_file(filename="/event_attendees.csv")
     path = File.join(__dir__, filename)
     @contents = CSV.read(path, headers: true, header_converters: :symbol)
-    puts @messages.file_load
   end
 
   def process_command(command)
     @command = command
     attribute = command.split[1]
-    puts "this is attribute #{attribute}"
     commandlength = -1 + command.length
-    criteria = command.split[2..commandlength].join(' ')
     case
     when quit
       puts 'quit!'
@@ -65,21 +61,17 @@ attr_accessor :finder
       puts @messages.help_find
     when queue_print
       @csv_processor = CSV_processor.new(@finder.queue2).format_output
-      # @csv_processor.format_output
-    # @messages.format_output(@finder.queue2)
     when queue_print_by
       attribute = @command.split[3]
       @finder.sorter(attribute)
-      @messages.format_output(@finder.queue2)
+      @csv_processor = CSV_processor.new(@finder.queue2).format_output
     when find
-      puts 'find!'
+      criteria = command.split[2..commandlength].join(' ')
       cleaner = Cleaner.new(@contents)
       cleaner.clean_all
-      @finder = Finder.new(contents)
+      @finder = Finder.new(@contents)
       @finder.lookup(attribute, criteria)
-      # puts @finder.queue
     when queue_count
-      puts "in the queue counter"
       @finder.queue_counter
     when queue_clear
       @finder.queue2 = []
@@ -91,8 +83,9 @@ attr_accessor :finder
       if command.split.length == 2
         filename = attribute
         self.load_file(filename)
+      else
+        self.load_file
       end
-      self.load_file
     else
       puts 'invalid command'
     end
@@ -164,19 +157,13 @@ attr_accessor :finder
 
   def queue_print_by
     @command.split[0..2].join(' ') == 'queue print by'
-    # puts @command.split[0..2]
   end
 
   def queue_save_to
     @command.split[0..2].join(' ') == 'queue save to'
-    # puts @command.split[0..2]
   end
 
   def queue_clear
     @command == 'queue clear'
   end
-
-  # def finder(attribute,criteria)
-  #   puts "the attribute is #{attribute}, criteria is #{criteria}"
-  # end
 end
