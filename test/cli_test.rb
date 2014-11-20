@@ -13,9 +13,8 @@ class CLI_Test < Minitest::Test
   end
 
   def test_that_it_loads_THE_file
-    skip
     @cli.load_file
-    refute @cli.contents == nil
+    refute @cli.contents.empty?
   end
 
   def test_help

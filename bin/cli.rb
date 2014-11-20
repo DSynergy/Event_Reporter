@@ -75,6 +75,7 @@ class CLI
         cleaner.clean_all
         @finder = Finder.new(@contents)
         @finder.lookup(attribute, criteria)
+        @messages.found_items
       else
         @messages.invalid_command
       end

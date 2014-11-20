@@ -22,11 +22,6 @@ class EmptinessTest < MiniTest::Test
     assert_equal [], cli.finder.queue2
   end
 
-  # def test_prints_nothing_on_queue_print_by_attribute_when_queue_is_empty
-  #
-  #   # assert_equal "Print was unsuccessful because the queue was empty. Try running 'load' followed by a 'find' command first.", reporter.process_and_execute("queue print by last_name")
-  # end
-
   def test_responds_to_queue_save_an_empty_file
     cli.process_command("queue save to empty.csv")
     emptyfile = File.open('./bin/empty.csv', "r")

@@ -78,4 +78,8 @@ class Messages
   def file_load
     @outstream.puts "Your file has been loaded correctly. Huzzah"
   end
+
+  def found_items
+    @outstream.puts "Your items have been placed in the queue. To see results type 'queue print'."
+  end
 end
