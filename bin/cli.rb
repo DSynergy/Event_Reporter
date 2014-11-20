@@ -16,14 +16,14 @@ class CLI
     @filename = "/event_attendees.csv"
     path = File.join(__dir__, @filename)
     @contents =  CSV.read(path, headers: true, header_converters: :symbol)
-    @messages = Messages.new
+    @messages = Messages.new(@outstream)
     @finder = Finder.new(@contents)
   end
 
   def call
-    puts @messages.intro_message
+    @messages.intro_message
     until quit
-      print @messages.command_prompt
+      @messages.command_prompt
       @command = gets.strip.downcase
       process_command(@command)
     end
@@ -32,7 +32,7 @@ class CLI
   def load_file(filename="/event_attendees.csv")
     path = File.join(__dir__, filename)
     @contents = CSV.read(path, headers: true, header_converters: :symbol)
-    puts @messages.file_load
+    @messages.file_load
   end
 
 
@@ -42,26 +42,26 @@ class CLI
     commandlength = -1 + command.length
     case
     when quit
-      puts @messages.quit
+      @messages.quit
       exit
     when help
-      puts @messages.help
+       @messages.help
     when help_load
-      puts @messages.help_load
+      @messages.help_load
     when help_queue
-      puts @messages.help_queue
+      @messages.help_queue
     when help_queue_clear
-      puts @messages.help_queue_clear
+      @messages.help_queue_clear
     when help_queue_print
-      puts @messages.help_queue_print
+      @messages.help_queue_print
     when help_queue_print_by
-      puts @messages.help_queue_print_by
+      @messages.help_queue_print_by
     when help_queue_count
-      puts @messages.help_queue_count
+      @messages.help_queue_count
     when help_queue_save_to
-      puts @messages.help_queue_save_to
+      @messages.help_queue_save_to
     when help_find
-      puts @messages.help_find
+      @messages.help_find
     when queue_print
       @csv_processor = CSV_processor.new(@finder.queue2).format_output
     when queue_print_by
@@ -76,10 +76,10 @@ class CLI
         @finder = Finder.new(@contents)
         @finder.lookup(attribute, criteria)
       else
-        puts @messages.invalid_command
+        @messages.invalid_command
       end
     when queue_count
-      @finder.queue_counter
+      @outstream.puts @finder.queue_counter
     when queue_clear
       @finder.queue2 = []
     when queue_save_to
@@ -94,7 +94,7 @@ class CLI
         self.load_file
       end
     else
-      puts @messages.invalid_command
+      @messages.invalid_command
     end
   end
 

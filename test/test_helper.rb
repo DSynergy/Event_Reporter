@@ -5,3 +5,4 @@ $LOAD_PATH.unshift(lib_dir, bin_dir, __dir__)
 gem 'minitest'
 require 'minitest/autorun'
 require 'minitest/pride'
+require 'cli'

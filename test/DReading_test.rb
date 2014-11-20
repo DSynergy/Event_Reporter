@@ -1,5 +1,5 @@
 require_relative 'test_helper'
-require_relative '../lib/event_reporter.rb'
+#require_relative '../lib/event_reporter.rb'
 
 class ReadingTest < MiniTest::Test
   attr_accessor :reporter

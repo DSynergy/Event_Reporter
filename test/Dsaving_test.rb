@@ -1,5 +1,4 @@
 require_relative 'test_helper'
-require_relative '../lib/event_reporter.rb'
 
 class SavingTest < MiniTest::Test
   attr_accessor :reporter

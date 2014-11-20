@@ -14,11 +14,11 @@ class Finder
   end
 
   def queue_counter
-    puts @queue2.count
+    @queue2.count
   end
 
   def sorter(attribute)
     @queue2 = @queue2.sort{|a,b| a[attribute.to_sym] <=> b[attribute.to_sym]}
   end
-  
+
 end
