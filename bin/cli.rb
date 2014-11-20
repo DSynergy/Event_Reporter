@@ -1,8 +1,8 @@
 require 'CSV'
-require_relative '../lib/messages'
-require_relative '../lib/finder'
-require_relative '../lib/CSV_processor'
-require_relative '../lib/cleaner'
+require 'messages'
+require 'finder'
+require 'CSV_processor'
+require 'cleaner'
 
 
 class CLI

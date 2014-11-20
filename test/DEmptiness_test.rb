@@ -12,6 +12,7 @@ class EmptinessTest < MiniTest::Test
   end
 
   def test_queue_count_is_zero_when_name_is_not_found
+    skip
     @cli.process_command("find last_name Johnson")
     # @cli.process_command("queue count")
     assert_equal 0, @cli.finder.queue2
